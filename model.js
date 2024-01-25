@@ -1,7 +1,13 @@
 import { getJSON } from "./helper.js";
-export async function getData(query) {
+
+export const state = {
+  weather: {},
+};
+
+export async function loadData(query) {
   try {
-    return await getJSON(query);
+    const weatherData = await getJSON(query);
+    state.weather = weatherData;
   } catch (err) {
     //render the error well here
     console.log(err);

@@ -1,4 +1,5 @@
-class searchView {
+import View from "./view.js";
+class searchView extends View {
   _parentElement = document.querySelector(".search");
 
   getSearchItem() {

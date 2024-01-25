@@ -582,13 +582,14 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _searchViewJs = require("./view/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
+var _resultsViewJs = require("./view/resultsView.js");
+var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 var _modelJs = require("./model.js");
 async function controlWeatherSearch() {
     try {
         const query = (0, _searchViewJsDefault.default).getSearchItem();
-        const returnValue = await _modelJs.getData(query);
-        console.log(returnValue);
-        console.log("https://assets.msn.com/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card");
+        await _modelJs.loadData(query);
+        (0, _resultsViewJsDefault.default).render(_modelJs.state.weather);
     } catch (err) {
         console.log(err);
     }
@@ -597,10 +598,12 @@ async function controlWeatherSearch() {
     (0, _searchViewJsDefault.default).subscribeEvents(controlWeatherSearch);
 })();
 
-},{"./view/searchView.js":"jOPk3","./model.js":"4mRaZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jOPk3":[function(require,module,exports) {
+},{"./view/searchView.js":"jOPk3","./model.js":"4mRaZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/resultsView.js":"aKEM9"}],"jOPk3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class searchView {
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class searchView extends (0, _viewJsDefault.default) {
     _parentElement = document.querySelector(".search");
     getSearchItem() {
         console.log(this._parentElement.querySelector("#locationInput").value);
@@ -615,7 +618,7 @@ class searchView {
 }
 exports.default = new searchView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view.js":"5kmV0"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -645,14 +648,32 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"4mRaZ":[function(require,module,exports) {
+},{}],"5kmV0":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getData", ()=>getData);
+class View {
+    _data;
+    render(data) {
+        this._data = data;
+        const markup = this._generateMarkup();
+        this._parentElement.insertAdjacentHTML("afterend", markup);
+    }
+}
+exports.default = View;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadData", ()=>loadData);
 var _helperJs = require("./helper.js");
-async function getData(query) {
+const state = {
+    weather: {}
+};
+async function loadData(query) {
     try {
-        return await (0, _helperJs.getJSON)(query);
+        const weatherData = await (0, _helperJs.getJSON)(query);
+        state.weather = weatherData;
     } catch (err) {
         //render the error well here
         console.log(err);
@@ -683,6 +704,20 @@ parcelHelpers.export(exports, "API_URL", ()=>API_URL);
 const API_KEY = "d22be7cd67e732a72d4d9aa3f577af18";
 const API_URL = "https://api.openweathermap.org/data/2.5/weather";
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4i6rz","a2PJv"], "a2PJv", "parcelRequireb4a1")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aKEM9":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class ResultsView extends (0, _viewJsDefault.default) {
+    _parentElement = document.querySelector(".column--1");
+    _generateMarkup() {
+        console.log(this._data);
+        return `<img src = "https://openweathermap.org/img/wn/${this._data.weather[0].icon}@2x.png"> <p>${this._data.main.temp.toFixed(1)}\xb0C</p>`;
+    }
+}
+exports.default = new ResultsView();
+
+},{"./view.js":"5kmV0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4i6rz","a2PJv"], "a2PJv", "parcelRequireb4a1")
 
 //# sourceMappingURL=index.561fface.js.map

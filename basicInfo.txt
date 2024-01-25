@@ -72,3 +72,5 @@ https://openweathermap.org/img/wn/10d@2x.png
 
 directory
 https://openweathermap.org/weather-conditions
+
+console.log("https://assets.msn.com/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card");
