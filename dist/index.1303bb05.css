@@ -1,0 +1,41 @@
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  text-align: center;
+  background-color: #ffffff80;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 105px auto 0;
+  padding: 20px;
+  box-shadow: 0 0 10px #0000004d;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+.container input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.weather-info {
+  margin-top: 20px;
+}
+
+/*# sourceMappingURL=index.1303bb05.css.map */

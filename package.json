@@ -1,0 +1,19 @@
+{
+  "name": "weather-app-project",
+  "version": "1.0.0",
+  "description": "Weather App Project (Portifolio Project)",
+  "main": "controller.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Leul Getachew",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.11.0"
+  },
+  "dependencies": {
+    "core-js": "^3.35.1",
+    "regenerator-runtime": "^0.14.1"
+  }
+}
