@@ -1,13 +1,21 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  background: rgb(83, 80, 142);
+  background: linear-gradient(
+    90deg,
+    rgba(83, 80, 142, 1) 0%,
+    rgba(72, 72, 156, 1) 37%,
+    rgba(0, 212, 255, 1) 100%
+  );
 }
 
 .container {
   max-width: 400px;
   margin: 0 auto;
   text-align: center;
-  padding: 20px;
+  padding: 47px;
+  padding-left: 110px;
+  padding-right: 128px;
   background-color: rgba(
     255,
     255,
@@ -20,12 +28,13 @@ body {
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 30px;
+  font-family: sans-serif;
 }
 
 .container input[type="text"] {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -45,3 +54,15 @@ button {
 }
 
 /* Add more styles as needed */
+
+.results-container {
+  display: flex;
+  margin: 60px;
+}
+
+.column {
+  flex: 1;
+  border: 1px solid black; /* Optional: To visualize the columns */
+  border-radius: 15px;
+  align-content: center;
+}

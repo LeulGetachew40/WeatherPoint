@@ -2,7 +2,8 @@ class searchView {
   _parentElement = document.querySelector(".search");
 
   getSearchItem() {
-    return this._parentElement.value;
+    console.log(this._parentElement.querySelector("#locationInput").value);
+    return this._parentElement.querySelector("#locationInput").value;
   }
 
   subscribeEvents(handler) {

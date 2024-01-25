@@ -1,5 +1,5 @@
 body {
-  background-color: #f0f0f0;
+  background: linear-gradient(90deg, #53508e 0%, #48489c 37%, #00d4ff 100%);
   font-family: Arial, sans-serif;
 }
 
@@ -9,12 +9,13 @@ body {
   border-radius: 10px;
   max-width: 400px;
   margin: 105px auto 0;
-  padding: 20px;
+  padding: 47px 128px 47px 110px;
   box-shadow: 0 0 10px #0000004d;
 }
 
 h1 {
-  font-size: 24px;
+  font-family: sans-serif;
+  font-size: 30px;
 }
 
 .container input[type="text"] {
@@ -22,7 +23,7 @@ h1 {
   border-radius: 5px;
   width: 100%;
   margin: 10px 0;
-  padding: 10px;
+  padding: 12px;
 }
 
 button {
@@ -36,6 +37,18 @@ button {
 
 .weather-info {
   margin-top: 20px;
+}
+
+.results-container {
+  margin: 60px;
+  display: flex;
+}
+
+.column {
+  border: 1px solid #000;
+  border-radius: 15px;
+  flex: 1;
+  align-content: center;
 }
 
 /*# sourceMappingURL=index.1303bb05.css.map */

@@ -588,6 +588,7 @@ async function controlWeatherSearch() {
         const query = (0, _searchViewJsDefault.default).getSearchItem();
         const returnValue = await _modelJs.getData(query);
         console.log(returnValue);
+        console.log("https://assets.msn.com/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card");
     } catch (err) {
         console.log(err);
     }
@@ -602,7 +603,8 @@ parcelHelpers.defineInteropFlag(exports);
 class searchView {
     _parentElement = document.querySelector(".search");
     getSearchItem() {
-        return this._parentElement.value;
+        console.log(this._parentElement.querySelector("#locationInput").value);
+        return this._parentElement.querySelector("#locationInput").value;
     }
     subscribeEvents(handler) {
         this._parentElement.addEventListener("submit", function(evt) {
