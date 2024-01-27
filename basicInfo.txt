@@ -74,3 +74,9 @@ directory
 https://openweathermap.org/weather-conditions
 
 console.log("https://assets.msn.com/weathermapdata/1/static/weather/Icons/taskbar_v10/Condition_Card");
+
+openweathermap map
+https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid={API key}
+
+seven days forecast
+api.openweathermap.org/data/2.5/forecast/daily?lat=44.34&lon=10.99&cnt=7&appid={API key}

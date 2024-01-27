@@ -1,5 +1,5 @@
 import View from "./view.js";
-class searchView extends View {
+class SearchView extends View {
   _parentElement = document.querySelector(".search");
 
   getSearchItem() {
@@ -15,4 +15,4 @@ class searchView extends View {
   }
 }
 
-export default new searchView();
+export default new SearchView();

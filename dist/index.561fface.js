@@ -584,12 +584,20 @@ var _searchViewJs = require("./view/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 var _resultsViewJs = require("./view/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
+var _mapViewJs = require("./view/mapView.js");
+var _mapViewJsDefault = parcelHelpers.interopDefault(_mapViewJs);
 var _modelJs = require("./model.js");
 async function controlWeatherSearch() {
     try {
         const query = (0, _searchViewJsDefault.default).getSearchItem();
         await _modelJs.loadData(query);
-        (0, _resultsViewJsDefault.default).render(_modelJs.state.weather);
+        const weatherData = _modelJs.state.weather;
+        const restData = await _modelJs.getRestCountryData(_modelJs.state.weather.sys.country);
+        (0, _resultsViewJsDefault.default).render({
+            weatherData,
+            restData
+        });
+        (0, _mapViewJsDefault.default).renderMap(weatherData);
     } catch (err) {
         console.log(err);
     }
@@ -598,12 +606,12 @@ async function controlWeatherSearch() {
     (0, _searchViewJsDefault.default).subscribeEvents(controlWeatherSearch);
 })();
 
-},{"./view/searchView.js":"jOPk3","./model.js":"4mRaZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/resultsView.js":"aKEM9"}],"jOPk3":[function(require,module,exports) {
+},{"./view/searchView.js":"jOPk3","./view/resultsView.js":"aKEM9","./model.js":"4mRaZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/mapView.js":"20lU7"}],"jOPk3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-class searchView extends (0, _viewJsDefault.default) {
+class SearchView extends (0, _viewJsDefault.default) {
     _parentElement = document.querySelector(".search");
     getSearchItem() {
         console.log(this._parentElement.querySelector("#locationInput").value);
@@ -616,9 +624,26 @@ class searchView extends (0, _viewJsDefault.default) {
         });
     }
 }
-exports.default = new searchView();
+exports.default = new SearchView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view.js":"5kmV0"}],"gkKU3":[function(require,module,exports) {
+},{"./view.js":"5kmV0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5kmV0":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class View {
+    _data;
+    _cleanAndAdd(markup) {
+        this._parentElement.innerHTML = "";
+        this._parentElement.insertAdjacentHTML("afterend", markup);
+    }
+    render(data) {
+        this._data = data;
+        const markup = this._generateMarkup();
+        this._cleanAndAdd(markup);
+    }
+}
+exports.default = View;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -648,46 +673,131 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"5kmV0":[function(require,module,exports) {
+},{}],"aKEM9":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class View {
-    _data;
-    render(data) {
-        this._data = data;
-        const markup = this._generateMarkup();
-        this._parentElement.insertAdjacentHTML("afterend", markup);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+var _configJs = require("../config.js");
+var _helperJs = require("../helper.js");
+class ResultsView extends (0, _viewJsDefault.default) {
+    _parentElement = document.querySelector("#result-container");
+    _generateMarkup() {
+        console.log(this._data);
+        (0, _helperJs.getSevenDayForecast)(this._data);
+        return `      <div class="home-container">
+    <div class="home-header-div"><h1 id='location-header' >${this._data.weatherData.name}, ${this._data.restData.name.common}</h1></div>
+    <div class="home-main-div">
+      <div class="home-today-weather-container">
+        <div class="home-weather-div">
+          <div class="home-today-weather-div">
+            <div class="home-weather-icon">
+            <img src='${0, _configJs.WEATHER_ICONS_URL}/${this._data.weatherData.weather[0].icon}@2x.png' title = '${this._data.weatherData.weather[0].description}'></div>
+            <div class="home-weather-celcius">
+              <h2 id='temp-value'>${this._data.weatherData.main.temp.toFixed(1)}\xb0C</h2>
+            </div>
+          </div>
+          <div class="home-time-div">
+            <div class="home-container01">
+            <h2>${(0, _helperJs.getCurrentTime)()}</h2></div>
+          </div>
+          <div class="home-weather-details">
+            <div class="home-weather-details-1">
+              <div class="home-weather-details-1-1"></div>
+              <div class="home-weather-details-1-2"></div>
+            </div>
+            <div class="home-weather-details-2">
+              <div class="home-weather-details-2-1"></div>
+              <div class="home-weather-details-2-2"></div>
+            </div>
+          </div>
+        </div>
+        <div id="weather-map-div">
+      </div>
+      <div class="home-weather-dorcast-div">
+        <div class="home-container02">
+          <div class="home-container03"></div>
+          <div class="home-container04">
+            <div class="home-container05"></div>
+            <div class="home-container06"></div>
+          </div>
+        </div>
+        <div class="home-container07">
+          <div class="home-container08"></div>
+          <div class="home-container09">
+            <div class="home-container10"></div>
+            <div class="home-container11"></div>
+          </div>
+        </div>
+        <div class="home-container12">
+          <div class="home-container13"></div>
+          <div class="home-container14">
+            <div class="home-container15"></div>
+            <div class="home-container16"></div>
+          </div>
+        </div>
+        <div class="home-container17">
+          <div class="home-container18"></div>
+          <div class="home-container19">
+            <div class="home-container20"></div>
+            <div class="home-container21"></div>
+          </div>
+        </div>
+        <div class="home-container22">
+          <div class="home-container23"></div>
+          <div class="home-container24">
+            <div class="home-container25"></div>
+            <div class="home-container26"></div>
+          </div>
+        </div>
+        <div class="home-container27">
+          <div class="home-container28"></div>
+          <div class="home-container29">
+            <div class="home-container30"></div>
+            <div class="home-container31"></div>
+          </div>
+        </div>
+        <div class="home-container32">
+          <div class="home-container33"></div>
+          <div class="home-container34">
+            <div class="home-container35"></div>
+            <div class="home-container36"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
     }
 }
-exports.default = View;
+exports.default = new ResultsView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
+},{"./view.js":"5kmV0","../config.js":"bSr8D","../helper.js":"8C2B8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bSr8D":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "state", ()=>state);
-parcelHelpers.export(exports, "loadData", ()=>loadData);
-var _helperJs = require("./helper.js");
-const state = {
-    weather: {}
-};
-async function loadData(query) {
-    try {
-        const weatherData = await (0, _helperJs.getJSON)(query);
-        state.weather = weatherData;
-    } catch (err) {
-        //render the error well here
-        console.log(err);
-    }
-}
+parcelHelpers.export(exports, "WEATHER_API_KEY", ()=>WEATHER_API_KEY);
+parcelHelpers.export(exports, "WEATHER_API_URL", ()=>WEATHER_API_URL);
+parcelHelpers.export(exports, "WEATHER_ICONS_URL", ()=>WEATHER_ICONS_URL);
+parcelHelpers.export(exports, "WEATHER_MAP_URL", ()=>WEATHER_MAP_URL);
+parcelHelpers.export(exports, "REST_API_URL", ()=>REST_API_URL);
+parcelHelpers.export(exports, "WEATHER_SEVEN_DAY_FORECAST_API_URL", ()=>WEATHER_SEVEN_DAY_FORECAST_API_URL);
+const WEATHER_API_KEY = "d22be7cd67e732a72d4d9aa3f577af18";
+const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather";
+const WEATHER_ICONS_URL = "https://openweathermap.org/img/wn";
+const WEATHER_MAP_URL = "https://tile.openweathermap.org/map/precipitation_new/5/3/3.png?appid";
+const REST_API_URL = "https://restcountries.com/v3.1/alpha";
+const WEATHER_SEVEN_DAY_FORECAST_API_URL = `api.openweathermap.org/data/2.5/forecast/daily`;
 
-},{"./helper.js":"8C2B8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8C2B8":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8C2B8":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getJSON", ()=>getJSON);
+parcelHelpers.export(exports, "getWeatherJSON", ()=>getWeatherJSON);
+parcelHelpers.export(exports, "getRestJSON", ()=>getRestJSON);
+parcelHelpers.export(exports, "getCurrentTime", ()=>getCurrentTime);
+parcelHelpers.export(exports, "getSevenDayForecast", ()=>getSevenDayForecast);
 var _configJs = require("./config.js");
-const getJSON = async function(query) {
+const getWeatherJSON = async function(query) {
     try {
-        const response = await fetch(`${(0, _configJs.API_URL)}?q=${query}&units=metric&appid=${(0, _configJs.API_KEY)}`);
+        const response = await fetch(`${(0, _configJs.WEATHER_API_URL)}?q=${query}&units=metric&appid=${(0, _configJs.WEATHER_API_KEY)}`);
         if (!response.ok) throw new Error(`Failed to Fetch (${response.status})`);
         return await response.json();
     } catch (err) {
@@ -695,28 +805,73 @@ const getJSON = async function(query) {
         console.log(err);
     }
 };
+async function getRestJSON(countryCode) {
+    try {
+        const response = await fetch(`${(0, _configJs.REST_API_URL)}/${countryCode}`);
+        return await response.json();
+    } catch (err) {
+        console.log(err);
+    }
+}
+function getCurrentTime() {
+    const now = new Date(Date.now());
+    return `${now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit"
+    })}`;
+}
+async function getSevenDayForecast(weatherObject) {
+    try {
+        const response = await fetch(`${(0, _configJs.WEATHER_SEVEN_DAY_FORECAST_API_URL)}?lat=${weatherObject.weatherData.coord.lat}&lon=${weatherObject.weatherData.coord.lon}&cnt=7&appid=${(0, _configJs.WEATHER_API_KEY)}`);
+        const data = await response.json();
+        console.log(data);
+    } catch (err) {}
+}
 
-},{"./config.js":"bSr8D","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bSr8D":[function(require,module,exports) {
+},{"./config.js":"bSr8D","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "API_KEY", ()=>API_KEY);
-parcelHelpers.export(exports, "API_URL", ()=>API_URL);
-const API_KEY = "d22be7cd67e732a72d4d9aa3f577af18";
-const API_URL = "https://api.openweathermap.org/data/2.5/weather";
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadData", ()=>loadData);
+parcelHelpers.export(exports, "getRestCountryData", ()=>getRestCountryData);
+var _helperJs = require("./helper.js");
+const state = {
+    weather: {},
+    countryData: {}
+};
+async function loadData(query) {
+    try {
+        const weatherData = await (0, _helperJs.getWeatherJSON)(query);
+        state.weather = weatherData;
+    } catch (err) {
+        //render the error well here
+        console.log(err);
+    }
+}
+async function getRestCountryData(countryCode) {
+    const [countryData] = await (0, _helperJs.getRestJSON)(countryCode);
+    state.countryData = countryData;
+    return await countryData;
+}
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aKEM9":[function(require,module,exports) {
+},{"./helper.js":"8C2B8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"20lU7":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./view.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-class ResultsView extends (0, _viewJsDefault.default) {
-    _parentElement = document.querySelector(".column--1");
-    _generateMarkup() {
-        console.log(this._data);
-        return `<img src = "https://openweathermap.org/img/wn/${this._data.weather[0].icon}@2x.png"> <p>${this._data.main.temp.toFixed(1)}\xb0C</p>`;
+class MapView extends (0, _viewJsDefault.default) {
+    renderMap(weatherData) {
+        const { lon, lat } = weatherData.coord;
+        const map = L.map("weather-map-div", {
+            zoomControl: false
+        }).setView([
+            lat,
+            lon
+        ], 13);
+        L.tileLayer("https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png").addTo(map);
     }
 }
-exports.default = new ResultsView();
+exports.default = new MapView();
 
 },{"./view.js":"5kmV0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["4i6rz","a2PJv"], "a2PJv", "parcelRequireb4a1")
 
